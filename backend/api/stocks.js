@@ -43,7 +43,7 @@ const ALL_SYMBOLS = [...STOCK_SYMBOLS, ...INDICES, ...COMMODITIES];
 
 const fetchYahooStockPrices = async () => {
   try {
-    const stockData = await yahooFinance.quote(STOCK_SYMBOLS);
+    const stockData = await yahooFinance.quote(ALL_SYMBOLS);
 
     return STOCK_SYMBOLS.map((symbol, index) => ({
       symbol,
