@@ -1,6 +1,7 @@
 
 
 import { useEffect, useState } from "react";
+import { ClipLoader } from "react-spinners";
 import "../App.css";
 
 interface Stock {
@@ -13,6 +14,7 @@ const Dashboard = () => {
   const [stocks, setStocks] = useState<Stock[]>([]);
   const [indices, setIndices] = useState<Stock[]>([]);
   const [commodities, setCommodities] = useState<Stock[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchStockPrices = async () => {
     try {
@@ -45,94 +47,83 @@ const Dashboard = () => {
             return { ...commodity, previousPrice: prevCommodity?.price || commodity.price };
           })
       );
+
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching stock data:", error);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchStockPrices(); // Fetch immediately
-    const interval = setInterval(fetchStockPrices, 5000); // Refresh every 5 seconds
-    return () => clearInterval(interval); // Cleanup
+    fetchStockPrices();
+    const interval = setInterval(fetchStockPrices, 5000);
+    return () => clearInterval(interval);
   }, []);
 
-  // Function to determine color and trend icon
   const getPriceStyle = (currentPrice: string, previousPrice?: string) => {
-    if (!previousPrice) return { color: "black", icon: "➖" };
+    if (!previousPrice) return { color: "white", icon: "➖" };
 
     const curr = parseFloat(currentPrice.replace("₹", ""));
     const prev = parseFloat(previousPrice.replace("₹", ""));
 
-    if (curr > prev) return { color: "green", icon: "🔼" };
-    if (curr < prev) return { color: "red", icon: "🔻" };
-    return { color: "black", icon: "➖" };
+    if (curr > prev) return { color: "#00c853", icon: "🔼" }; // Green
+    if (curr < prev) return { color: "#d50000", icon: "🔻" }; // Red
+    return { color: "white", icon: "➖" }; // No change
   };
 
   return (
     <div className="dashboard-container">
-      <h1>📈 Indian Market Dashboard</h1>
+      <h1 className="dashboard-title">📈 Indian Market Dashboard</h1>
+          {/* Legend Bar */}
+          <div className="legend-bar">
+        <span><b>🔼</b> Price Increased (Green)</span>
+        <span><b>🔻</b> Price Decreased (Red)</span>
+        <span><b>➖</b> Price Unchanged (Black)</span>
+      </div>
 
-      <h2>Stocks</h2>
+      {loading ? (
+        <div className="loading-container">
+          <ClipLoader color="#00c853" size={50} />
+          <p>Fetching latest data...</p>
+        </div>
+      ) : (
+        <div className="dashboard-grid">
+          <StockTable title="Stocks" data={stocks} getPriceStyle={getPriceStyle} />
+          <StockTable title="Market Indices" data={indices} getPriceStyle={getPriceStyle} />
+          <StockTable title="Commodities" data={commodities} getPriceStyle={getPriceStyle} />
+        </div>
+      )}
+    </div>
+  );
+};
+
+const StockTable = ({
+  title,
+  data,
+  getPriceStyle,
+}: {
+  title: string;
+  data: Stock[];
+  getPriceStyle: (currentPrice: string, previousPrice?: string) => { color: string; icon: string };
+}) => (
+  <div className="table-container">
+    <h2>{title}</h2>
+    <div className="table-wrapper">
       <table>
         <thead>
           <tr>
-            <th>Stock</th>
+            <th>{title === "Stocks" ? "Stock" : "Name"}</th>
             <th>Price</th>
           </tr>
         </thead>
         <tbody>
-          {stocks.map(({ symbol, price, previousPrice }) => {
+          {data.map(({ symbol, price, previousPrice }) => {
             const { color, icon } = getPriceStyle(price, previousPrice);
             return (
               <tr key={symbol}>
-                <td>{symbol.replace(".NS", "")}</td>
-                <td style={{ color }}>
-                  {price} {icon}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-
-      <h2>Market Indices</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Index</th>
-            <th>Price</th>
-          </tr>
-        </thead>
-        <tbody>
-          {indices.map(({ symbol, price, previousPrice }) => {
-            const { color, icon } = getPriceStyle(price, previousPrice);
-            return (
-              <tr key={symbol}>
-                <td>{symbol}</td>
-                <td style={{ color }}>
-                  {price} {icon}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-
-      <h2>Commodities</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Commodity</th>
-            <th>Price</th>
-          </tr>
-        </thead>
-        <tbody>
-          {commodities.map(({ symbol, price, previousPrice }) => {
-            const { color, icon } = getPriceStyle(price, previousPrice);
-            return (
-              <tr key={symbol}>
-                <td>{symbol}</td>
-                <td style={{ color }}>
+                <td>{symbol.replace(/(\.NS|=)/g, "")}</td>
+                <td style={{ color, fontWeight: "bold" }}>
                   {price} {icon}
                 </td>
               </tr>
@@ -141,10 +132,12 @@ const Dashboard = () => {
         </tbody>
       </table>
     </div>
-  );
-};
+  </div>
+);
 
 export default Dashboard;
+
+
 
 
 
