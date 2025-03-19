@@ -4,14 +4,13 @@ const express = require("express");
 const axios = require("axios");
 const yahooFinance = require("yahoo-finance2").default;
 
-const router = express.Router();
-const ALPHA_VANTAGE_KEY = "ZI67PRFNX55WSWFP"; // Replace with actual API key
+// const router = express.Router();
 
 
 
 // List of 50 Indian Stocks (You can modify this list)
 const STOCK_SYMBOLS = [
-  "TCS.NS", "INFY.NS", "RELIANCE.NS", "SBIN.NS", "HDFC.NS",
+  "TCS.NS", "INFY.NS", "RELIANCE.NS", "SBIN.NS", "HDFCBANK.NS",
   "ICICIBANK.NS", "AXISBANK.NS", "KOTAKBANK.NS", "LT.NS", "ITC.NS",
   "HINDUNILVR.NS", "BAJFINANCE.NS", "ASIANPAINT.NS", "SUNPHARMA.NS", "TITAN.NS",
   "ULTRACEMCO.NS", "WIPRO.NS", "TECHM.NS", "HCLTECH.NS", "ADANIENT.NS",
@@ -25,10 +24,13 @@ const STOCK_SYMBOLS = [
 
 // Add Indices & Commodities
 const INDICES = [
-  "^NSEI", // Nifty 50
-  "^BSESN", // Sensex
-  "^BANKNIFTY", // Bank Nifty
-  "^CNXIT", // Nifty IT
+  "^NSEI",   // Nifty 50
+  "^BSESN",  // Sensex
+  "^NSEBANK", // Nifty Bank
+  "^CNXIT",  // Nifty IT
+  "^CNXFMCG", // Nifty FMCG
+  "^CNXPHARMA", // Nifty Pharma
+  "^CNXAUTO" // Nifty Auto
 ];
 
 const COMMODITIES = [
@@ -41,22 +43,41 @@ const COMMODITIES = [
 // Combine all symbols
 const ALL_SYMBOLS = [...STOCK_SYMBOLS, ...INDICES, ...COMMODITIES];
 
+// Fetch Yahoo Finance Prices in Batches
 const fetchYahooStockPrices = async () => {
   try {
-    const stockData = await yahooFinance.quote(ALL_SYMBOLS);
+    const options = { validateResult: false, headers: { "User-Agent": "Mozilla/5.0" } };
 
-    return STOCK_SYMBOLS.map((symbol, index) => ({
-      symbol,
-      price: stockData[index]?.regularMarketPrice
-        ? `₹${stockData[index].regularMarketPrice}`
-        : "N/A"
-    }));
+    const fetchInBatches = async (symbols) => {
+      const batchSize = 10;
+      let allResults = [];
+      for (let i = 0; i < symbols.length; i += batchSize) {
+        const batch = symbols.slice(i, i + batchSize);
+        try {
+          const batchResults = await yahooFinance.quote(batch, options);
+          allResults = allResults.concat(batchResults);
+          await new Promise((resolve) => setTimeout(resolve, 2000)); // Prevent blocking
+        } catch (error) {
+          console.error("Batch fetch error:", error.message);
+        }
+      }
+      return allResults;
+    };
+
+    const results = await fetchInBatches(ALL_SYMBOLS);
+
+    return ALL_SYMBOLS.map((symbol) => {
+      const stockData = results.find((item) => item.symbol === symbol);
+      return {
+        symbol,
+        price: stockData?.regularMarketPrice ? `₹${stockData.regularMarketPrice}` : "N/A"
+      };
+    });
   } catch (error) {
-    console.error("Yahoo Finance API Error:", error.message);
-    return STOCK_SYMBOLS.map((symbol) => ({ symbol, price: "N/A" }));
+    console.error("Yahoo Finance API Error:", error);
+    return ALL_SYMBOLS.map((symbol) => ({ symbol, price: "N/A" }));
   }
 };
 
-module.exports = fetchYahooStockPrices;
 
-// module.exports = router;
+module.exports = fetchYahooStockPrices;
