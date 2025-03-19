@@ -12,7 +12,7 @@ import StockPrice from "./components/StockPrice";
 function App() {
   return (
     <Router>
-      <Routes>
+      <Routes> 
         <Route path="/" element={<Home />} />
         {/* <Route path="/stocks" element={<Stocks />} />
         <Route path="/portfolio" element={<Portfolio />} />
