@@ -90,8 +90,11 @@ const Dashboard = () => {
       ) : (
         <div className="dashboard-grid">
           <StockTable title="Stocks" data={stocks} getPriceStyle={getPriceStyle} />
+          <div className="box">
           <StockTable title="Market Indices" data={indices} getPriceStyle={getPriceStyle} />
           <StockTable title="Commodities" data={commodities} getPriceStyle={getPriceStyle} />
+            </div>
+          
         </div>
       )}
     </div>
