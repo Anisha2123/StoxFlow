@@ -1,7 +1,16 @@
 
-
+// import StockPrice from "../components/StockPrice";
+import Dashboard from "../components/Dasboard";
 const Home = () => {
-    return <h1>Welcome to Stock Market Dashboard</h1>;
+
+    const stocks = ["RELIANCE", "TCS", "INFY", "HDFCBANK", "SBIN"]; // List of NSE Stocks
+
+    return (
+         <div>
+      <Dashboard />
+    </div>
+    )
+   
   };
   
   export default Home;

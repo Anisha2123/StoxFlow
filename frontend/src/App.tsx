@@ -7,6 +7,7 @@ import News from "./pages/News";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
+import StockPrice from "./components/StockPrice";
 
 function App() {
   return (
