@@ -4,10 +4,22 @@ const cors = require("cors");
 const fetchYahooStockPrices = require("./api/stocks");
 const yahooFinance = require("yahoo-finance2").default;
 const axios =require("axios");
+const stockRoutes = require("./routes/stockRoutes");
+const aiRoutes = require("./routes/aiRoutes");
+const sentimentRoutes = require("./routes/sentimentRoutes");
+
+
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// for stocks ratings 
+app.use("/api/stocks", stockRoutes); // ✅ Mounts the stock routes
+
+app.use("/api/ai", aiRoutes);
+
+app.use("/api/sentiment", sentimentRoutes);
 
 // for dashboard live prices
 app.get("/stocks", async (req, res) => {
@@ -98,6 +110,7 @@ app.get("/search-stocks", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch stock suggestions" });
   }
 });
+
 
   
 

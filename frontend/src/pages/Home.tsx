@@ -8,7 +8,7 @@ const Home = () => {
 
     return (
          <div>
-      {/* <Dashboard /> */}
+      <Dashboard />
       <StockChart symbol="AAPL" />
 
     </div>

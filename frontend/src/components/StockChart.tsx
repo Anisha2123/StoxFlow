@@ -57,6 +57,18 @@ const StockChart: React.FC = () => {
   const [chartData, setChartData] = useState<any>(null);
   const chartRef = useRef<ChartJS<keyof ChartTypeRegistry> | null>(null);
   const [suggestions, setSuggestions] = useState<{ symbol: string; name: string }[]>([]);
+  const [sentiment, setSentiment] = useState({ sentimentScore: 0, sentimentLabel: "", news: [] });
+
+  useEffect(() => {
+    if (!symbol) return;
+  
+    fetch(`http://localhost:5000/api/sentiment/${symbol}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setSentiment(data);
+      })
+      .catch((error) => console.error("Error fetching sentiment:", error));
+  }, [symbol]);
 
   useEffect(() => {
     if (searchQuery.length < 2) return setSuggestions([]);
@@ -231,7 +243,45 @@ const StockChart: React.FC = () => {
           <Bar ref={chartRef} data={chartData} options={{ responsive: true }} />
         )}
       </div>
+      <div className="sentiment-container">
+  <div className={`sentiment-card ${sentiment.sentimentLabel.toLowerCase()}`}>
+    <h3>📊 Sentiment Analysis</h3>
+    <p className="sentiment-score">
+      Sentiment Score: <strong>{sentiment.sentimentScore.toFixed(2)}</strong>
+    </p>
+    <span className="sentiment-label">
+      {sentiment.sentimentLabel === "Positive" ? "📈 Bullish" : 
+       sentiment.sentimentLabel === "Negative" ? "📉 Bearish" : "⚖ Neutral"}
+    </span>
+  </div>
+
+  <div className="news-section">
+    <h3>📰 Latest Market News</h3>
+    <ul className="news-list">
+      {sentiment.news.slice(0, 4).map((news, index) => (
+        <li key={index} className="news-item">
+          <a href={news.link} target="_blank" rel="noopener noreferrer">
+            {news.thumbnail?.resolutions ? (
+              <img src={news.thumbnail.resolutions[0].url} alt="News" className="news-image" />
+            ) : (
+              <div className="news-placeholder">No Image</div>
+            )}
+            <div className="news-text">
+              <h4>{news.title}</h4>
+              <p className="news-source">{news.publisher}</p>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+
+
+
     </div>
+    
   );
 };
 
