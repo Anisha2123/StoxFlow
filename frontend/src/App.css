@@ -152,6 +152,67 @@ tr:hover {
   align-items: center;
   height: 600px; /* 🔥 Adjust as needed */
 }
+.search-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+  
+}
+
+.search-bar input {
+  width: 20rem;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #00c853;
+  border-radius: 5px;
+  outline: none;
+  transition: all 0.3s ease;
+  background: #1c2541;
+  /* background-color: #222; */
+  color: #fff;
+}
+
+.search-bar input:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.search-bar button {
+  padding: 10px 15px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #00c853;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-bar button:hover {
+  background-color: #009624;
+}
+
+
+.suggestions-list {
+  position: absolute;
+  background: #1c2541;
+  /* border: 1px solid #ccc; */
+  list-style: none;
+  padding: 5px;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  /* color: black; */
+}
+
+.suggestions-list li {
+  padding: 8px;
+  cursor: pointer;
+}
+
 
 .chart-container {
   max-width: 900px;

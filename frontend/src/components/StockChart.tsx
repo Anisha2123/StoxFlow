@@ -1,6 +1,7 @@
 
 
 import { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import "../App.css";
 import {
   Chart as ChartJS,
@@ -46,11 +47,25 @@ interface StockData {
   volume: number;
 }
 
-const StockChart: React.FC<{ symbol: string }> = ({ symbol }) => {
+// const StockChart: React.FC<{ symbol: string }> = ({ symbol }) => {
+const StockChart: React.FC = () => {
+  const [symbol, setSymbol] = useState("AAPL"); // Default stock
+  const [inputSymbol, setInputSymbol] = useState(""); // Input field value
+  const [searchQuery, setSearchQuery] = useState("");
   const [chartType, setChartType] = useState("candlestick");
   const [stockData, setStockData] = useState<StockData[]>([]);
   const [chartData, setChartData] = useState<any>(null);
   const chartRef = useRef<ChartJS<keyof ChartTypeRegistry> | null>(null);
+  const [suggestions, setSuggestions] = useState<{ symbol: string; name: string }[]>([]);
+
+  useEffect(() => {
+    if (searchQuery.length < 2) return setSuggestions([]);
+
+    axios.get(`http://localhost:5000/search-stocks?query=${searchQuery}`)
+      .then((res) => setSuggestions(res.data))
+      .catch((err) => console.error("Search error:", err));
+  }, [searchQuery]);
+
 
   useEffect(() => {
     if (!symbol) {
@@ -76,16 +91,16 @@ const StockChart: React.FC<{ symbol: string }> = ({ symbol }) => {
   useEffect(() => {
     if (!stockData.length) return;
 
-    console.log(
-      "Candlestick Data:",
-      stockData.map((item) => ({
-        x: new Date(item.date),
-        o: item.open,
-        h: item.high,
-        l: item.low,
-        c: item.close,
-      }))
-    );
+    // console.log(
+    //   "Candlestick Data:",
+    //   stockData.map((item) => ({
+    //     x: new Date(item.date),
+    //     o: item.open,
+    //     h: item.high,
+    //     l: item.low,
+    //     c: item.close,
+    //   }))
+    // );
 
     if (chartRef.current) {
       chartRef.current.destroy();
@@ -130,6 +145,27 @@ const StockChart: React.FC<{ symbol: string }> = ({ symbol }) => {
   
   return (
     <div className="chart-container">
+        <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Search stocks..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        {suggestions.length > 0 && (
+          <ul className="suggestions-list">
+            {suggestions.map((stock) => (
+              <li key={stock.symbol} onClick={() => {
+                setSymbol(stock.symbol);
+                setSearchQuery("");
+                setSuggestions([]);
+              }}>
+                {stock.symbol} - {stock.name}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
       <h2 className="chart-title">{symbol} Stock Chart</h2>
       <div className="chart-controls">
         <button
