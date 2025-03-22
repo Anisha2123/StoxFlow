@@ -7,12 +7,25 @@ const axios =require("axios");
 const stockRoutes = require("./routes/stockRoutes");
 const aiRoutes = require("./routes/aiRoutes");
 const sentimentRoutes = require("./routes/sentimentRoutes");
-
-
+const authRoutes = require("./routes/authRoutes");
+const mongoose = require("mongoose");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Connect MongoDB
+mongoose
+  .connect("mongodb://127.0.0.1:27017/stockDB", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.error(err));
+
+
+  // for authentication 
+  app.use("/api/auth", authRoutes);
 
 // for stocks ratings 
 app.use("/api/stocks", stockRoutes); // ✅ Mounts the stock routes

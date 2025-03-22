@@ -4,18 +4,19 @@ import Home from "./pages/Home";
 import Stocks from "./pages/Stocks";
 import Portfolio from "./pages/Portfolio";
 import News from "./pages/News";
-import Login from "./pages/Login";
+// import Login from "./component/Login";
 import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
 import StockPrice from "./components/StockPrice";
+import Login from "./components/Login";
 
 function App() {
   return (
     <Router>
       <Routes> 
-        <Route path="/" element={<Home />} />
-        {/* <Route path="/stocks" element={<Stocks />} />
-        <Route path="/portfolio" element={<Portfolio />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/home" element={<Home />} />
+        {/* <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/news" element={<News />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
