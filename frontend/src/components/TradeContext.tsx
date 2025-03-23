@@ -24,7 +24,7 @@ export const TradeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const fetchTrades = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/trades/get-trades");
+      const response = await fetch("http://localhost:5000/api/trades/get-trades/:userId");
       const data = await response.json();
       setTradeHistory(data); // ✅ Update trade history
     } catch (error) {

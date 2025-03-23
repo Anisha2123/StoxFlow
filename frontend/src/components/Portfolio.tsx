@@ -1,52 +1,101 @@
 
 
 
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import "../App.css";
+// import React, { useEffect, useState } from "react";
 
-interface Trade {
+// interface Stock {
+//   stockSymbol: string;
+//   quantity: number;
+//   averagePrice: number;
+// }
+
+// const Portfolio: React.FC<{ userId: string }> = ({ userId }) => {
+//   const [portfolio, setPortfolio] = useState<Stock[]>([]);
+
+//   useEffect(() => {
+//     const fetchPortfolio = async () => {
+//       try {
+//         const response = await fetch(`http://localhost:5000/api/portfolio/${userId}`);
+//         const data = await response.json();
+//         setPortfolio(data.stocks || []);
+//       } catch (error) {
+//         console.error("Error fetching portfolio:", error);
+//       }
+//     };
+
+//     fetchPortfolio();
+//   }, [userId]);
+
+//   return (
+//     <div className="portfolio-container">
+//       <h2>📈 Portfolio</h2>
+//       {portfolio.length === 0 ? (
+//         <p>No stocks in portfolio.</p>
+//       ) : (
+//         <table>
+//           <thead>
+//             <tr>
+//               <th>Stock</th>
+//               <th>Quantity</th>
+//               <th>Avg. Price</th>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {portfolio.map((stock) => (
+//               <tr key={stock.stockSymbol}>
+//                 <td>{stock.stockSymbol}</td>
+//                 <td>{stock.quantity}</td>
+//                 <td>${stock.averagePrice.toFixed(2)}</td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default Portfolio;
+
+
+import React from "react";
+
+interface Stock {
   stockSymbol: string;
+  marketPrice: number;
+  totalAmount: number;
   quantity: number;
-  tradeType: "buy" | "sell";
-  price: number;
-  date: string;
+  time: string;
+  type: "buy" | "sell";
 }
 
-const Portfolio: React.FC = () => {
-  const [trades, setTrades] = useState<Trade[]>([]);
+interface PortfolioProps {
+  portfolio?: { balance: number; stocks: Stock[] }; // ✅ Make portfolio optional
+}
 
-  useEffect(() => {
-    fetchTrades();
-  }, []);
-
-  const fetchTrades = async () => {
-    try {
-      const response = await axios.get(`/api/virtual-trading/trades/${localStorage.getItem("userId")}`);
-      setTrades(Array.isArray(response.data) ? response.data : []); // ✅ Ensure it's an array
-    } catch (error) {
-      console.error("Error fetching trades:", error);
-      setTrades([]); // ✅ Prevent errors by setting an empty array
-    }
-  };
+const Portfolio: React.FC<PortfolioProps> = ({ portfolio = { balance: 0, stocks: [] } }) => {
+  const stocks = portfolio?.stocks || []; // ✅ Ensure stocks is always an array
 
   return (
     <div className="portfolio-container">
-      <h2>Trade History</h2>
-      {trades.length > 0 ? ( // ✅ Check before mapping
-        <ul>
-          {trades.map((trade, index) => (
+      <h3>Portfolio</h3>
+      <p>Balance: ${portfolio?.balance ? portfolio.balance.toFixed(2) : "0.00"}</p> {/* ✅ Prevents `toFixed` error */}
+      <ul>
+        {stocks.length > 0 ? (
+          stocks.map((stock, index) => (
             <li key={index}>
-              {trade.date}: {trade.tradeType.toUpperCase()} {trade.quantity} shares of {trade.stockSymbol} at ${trade.price.toFixed(2)}
+              {stock.stockSymbol} - {stock.quantity} shares @ ${stock.marketPrice}
             </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No trades found.</p> // ✅ Show message if there are no trades
-      )}
+          ))
+        ) : (
+          <p>No stocks available</p>
+        )}
+      </ul>
     </div>
   );
 };
 
 export default Portfolio;
+
+
 

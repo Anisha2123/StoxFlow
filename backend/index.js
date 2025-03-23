@@ -9,6 +9,9 @@ const aiRoutes = require("./routes/aiRoutes");
 const sentimentRoutes = require("./routes/sentimentRoutes");
 const authRoutes = require("./routes/authRoutes");
 const virtualTradingRoutes = require("./routes/virtualTradingRoutes");
+
+const portfolioRoutes = require("./routes/portfolio"); // Import portfolio route
+
 const dotenv = require("dotenv")
 const mongoose = require("mongoose");
 
@@ -41,6 +44,9 @@ app.use("/api/ai", aiRoutes);
 
 // for sentiment analysis
 app.use("/api/sentiment", sentimentRoutes);
+
+// Use portfolio routes 
+app.use("/api/portfolio", portfolioRoutes); // ✅ Prefix the route
 
 
 // for dashboard live prices
@@ -134,7 +140,10 @@ app.get("/search-stocks", async (req, res) => {
 });
 
 
-  
+app.get("/", (req, res) => {
+  res.send("✅ Server is running!");
+});
+
 
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

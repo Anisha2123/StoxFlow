@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TradingHistory from "./TradeHistory";
+import Portfolio from "./Portfolio";
 import { useTrade } from "./TradeContext"; // Import context hook
 import "../App.css";
 
@@ -33,13 +34,37 @@ const VirtualTradingDashboard: React.FC = () => {
   const [portfolio, setPortfolio] = useState({ balance: 10000, stocks: [] });
   const [tradeHistory, setTradeHistory] = useState<Trade[]>([]);
   const [stockSymbol, setStockSymbol] = useState("AAPL");
+  const [userId, setUserId] = useState<string | null>(null); // ✅ Store user ID
   const { fetchTrades } = useTrade(); // Use fetchTrades from context
 
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("userId")?.replace(/\s/g, "");
+    if (storedUserId) {
+      setUserId(storedUserId);
+      fetchUserPortfolio(storedUserId); // ✅ Fetch portfolio inside this file
+    }
+  }, []);
 
-  // Simulated Market Price (Replace with API)
-  const getMarketPrice = () => Math.random() * (300 - 100) + 100;
+  const fetchUserPortfolio = async (userId: string) => {
+    try {
+      const response = await axios.post(`http://localhost:5000/api/portfolio/update-portfolio/${userId}`);
+      setPortfolio(response.data || { balance: 0, stocks: [] });
+    } catch (error) {
+      console.error("Error fetching portfolio:", error);
+      setPortfolio({ balance: 0, stocks: [] }); // ✅ Prevent `undefined`
+    }
+  };
+
+  
   
   const handleTrade = async () => {
+  
+    
+    if (!userId) {
+      alert("Please log in first.");
+      return;
+    }
+
     if (!stockSymbol) {
       alert("Please select a stock first!");
       return;
@@ -49,12 +74,13 @@ const VirtualTradingDashboard: React.FC = () => {
     const totalAmount = quantity * marketPrice;
     
     const tradeData = {
+      userId, // ✅ Include userId in trade data
       stockSymbol: stockSymbol,
       marketPrice,
       totalAmount,
       quantity,
       tradeType: tradeType, // ✅ Fix: match the `Trade` interface
-      // time: new Date().toISOString(), // Add timestamp
+      time: new Date().toISOString(), // Add timestamp
     };
     console.log(
       stockSymbol,
@@ -68,7 +94,7 @@ const VirtualTradingDashboard: React.FC = () => {
 
   
     try {
-      const response = await fetch("http://localhost:5000/api/trades/save-trade", {
+      const response = await fetch("http://localhost:5000/api/trades/save-trade/${userId}", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(tradeData),
@@ -80,10 +106,13 @@ const VirtualTradingDashboard: React.FC = () => {
         console.log("Trade Data:", result.trade);
         fetchTrades(); // ✅ Fetch updated trade history
 
-        
-          // ✅ Add the trade from API response to history (ensures `_id` and `timestamp` are included)
-    // setTradeHistory((prevHistory) => [result.trade, ...prevHistory]);
-     
+      
+      // Update Portfolio
+      await fetch(`http://localhost:5000/api/portfolio/update-portfolio/${userId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(tradeData),
+      });
 
       } else {
         alert("Error saving trade!");
@@ -124,28 +153,15 @@ const VirtualTradingDashboard: React.FC = () => {
       <div className="trade-form">
         <input type="number" min="1" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} />
         <select className="select" value={tradeType} onChange={(e) => setTradeType(e.target.value as "buy" | "sell")}>
-          <option value="buy">Buy</option>
+          <option  value="buy">Buy</option>
           <option value="sell">Sell</option>
         </select>
         <button className="btn" onClick={handleTrade}>Execute Trade</button>
       </div>
-      {portfolio ? (
-        <div>
-          <h3>Balance: ${portfolio.balance?.toFixed(2)}</h3>
-          <h3>Portfolio:</h3>
-          {portfolio.stocks?.length > 0 ? ( // ✅ Safe check before accessing `.length`
-            portfolio.stocks.map((stock) => (
-              <p key={stock.stockSymbol}>
-                {stock.stockSymbol}: {stock.quantity} shares
-              </p>
-            ))
-          ) : (
-            <p>No stocks in portfolio.</p>
-          )}
-        </div>
-      ) : (
-        <p>Loading portfolio...</p>
-      )}
+      {/* <Portfolio userId={userId} /> */}
+
+      {userId && <Portfolio portfolio={portfolio} />} {/* ✅ Pass portfolio as prop */}
+      
       <TradingHistory history={tradeHistory} />
     </div>
   );

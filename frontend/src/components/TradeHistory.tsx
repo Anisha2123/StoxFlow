@@ -35,7 +35,12 @@ const TradingHistory: React. FC<TradingHistoryProps> = ({ history }) => {
 //     fetchTrades();
 //   }, []);
 
+
+
 useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+
     fetchTrades(); // ✅ Fetch trades on mount
   }, []);
 
