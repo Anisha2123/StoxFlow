@@ -58,7 +58,7 @@ router.get("/:userId", async (req, res) => {
 // });
 
 router.post("/update-portfolio/:userId", async (req, res) => {
-  console.log("✅ API Called");
+  console.log("✅ API Called update portfolio");
   console.log("🔹 Request Params:", req.params);
   console.log("🔹 Request Body:", req.body);
     const { stockSymbol, quantity, marketPrice, tradeType } = req.body;

@@ -20,7 +20,7 @@ interface TradingHistoryProps {
 
 const TradingHistory: React. FC<TradingHistoryProps> = ({ history }) => {
     const { tradeHistory, fetchTrades } = useTrade();
-   
+    const [userId, setUserId] = useState<string | null>(null);
 //   useEffect(() => {
 //     const fetchTrades = async () => {
 //       try {
@@ -37,11 +37,15 @@ const TradingHistory: React. FC<TradingHistoryProps> = ({ history }) => {
 
 
 
-useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    if (!userId) return;
 
-    fetchTrades(); // ✅ Fetch trades on mount
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId) {
+      setUserId(storedUserId);
+      fetchTrades(storedUserId); // ✅ Fetch only if userId exists
+    } else {
+      console.error("❌ userId is not found in localStorage!");
+    }
   }, []);
 
   return (

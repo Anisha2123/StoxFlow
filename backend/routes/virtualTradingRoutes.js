@@ -30,15 +30,21 @@ router.get("/portfolio/:userId", async (req, res) => {
 // });
 
 router.post("/save-trade/:userId", async (req, res) => {
-  const { userId, stockSymbol, marketPrice, totalAmount, quantity, tradeType } = req.body;
+  console.log("✅ API Called save-trade ");
+  console.log("🔹 Request Params:", req.params);
+  console.log("🔹 Request Body:", req.body);
 
+  const { stockSymbol, marketPrice, totalAmount, quantity, tradeType } = req.body;
+  const userId = req.params.userId; // ✅ Get userId from request params
+  console.log(userId);
   if (!userId) {
+    console.error("❌ User ID is missing!");
     return res.status(400).json({ error: "User ID is required" });
   }
 
   try {
     const newTrade = new Trade({
-      userId,  // Associate trade with user
+      userId,  // ✅ Ensure userId is included
       stockSymbol,
       marketPrice,
       totalAmount,
@@ -47,12 +53,18 @@ router.post("/save-trade/:userId", async (req, res) => {
       timestamp: new Date(),
     });
 
+    console.log("🔹 Trade Data Before Saving:", newTrade);
+
     await newTrade.save();
+    console.log("✅ Trade Saved Successfully:", newTrade);
+
     res.json({ message: "Trade saved", trade: newTrade });
   } catch (error) {
+    console.error("❌ Error Saving Trade:", error);
     res.status(500).json({ error: "Error saving trade" });
   }
 });
+
 
 
 // ✅ Fetch all trade history 
@@ -67,8 +79,17 @@ router.post("/save-trade/:userId", async (req, res) => {
 // });
 
 router.get("/get-trades/:userId", async (req, res) => {
+  
   try {
-    const trades = await Trade.find({ userId: req.params.userId }).sort({ timestamp: -1 });
+    
+    console.log("✅ API Called get-trades");
+    console.log("🔹 Request Params:", req.params);
+    console.log("🔹 Request Params:", req.params);
+    console.log("🔹 Request Body:", req.body);
+    const userId = decodeURIComponent(req.params.userId); // ✅ Decode userId
+    console.log("🔹 Decoded User ID:", userId);
+    // const userId = req.params.userId; // ✅ Fix: Get userId from req.params
+    const trades = await Trade.find({ userId }).sort({ timestamp: -1 });
     res.json(trades);
   } catch (error) {
     res.status(500).json({ error: "Error fetching trades" });

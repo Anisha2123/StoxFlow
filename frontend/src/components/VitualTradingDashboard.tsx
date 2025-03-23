@@ -94,7 +94,7 @@ const VirtualTradingDashboard: React.FC = () => {
 
   
     try {
-      const response = await fetch("http://localhost:5000/api/trades/save-trade/${userId}", {
+      const response = await fetch(`http://localhost:5000/api/trades/save-trade/${userId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(tradeData),
@@ -104,7 +104,7 @@ const VirtualTradingDashboard: React.FC = () => {
       if (response.ok) {
         // alert("Trade saved successfully!");
         console.log("Trade Data:", result.trade);
-        fetchTrades(); // ✅ Fetch updated trade history
+        fetchTrades(userId); // ✅ Fetch updated trade history
 
       
       // Update Portfolio
