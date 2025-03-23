@@ -8,8 +8,11 @@ const stockRoutes = require("./routes/stockRoutes");
 const aiRoutes = require("./routes/aiRoutes");
 const sentimentRoutes = require("./routes/sentimentRoutes");
 const authRoutes = require("./routes/authRoutes");
+const virtualTradingRoutes = require("./routes/virtualTradingRoutes");
+const dotenv = require("dotenv")
 const mongoose = require("mongoose");
 
+dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -30,9 +33,15 @@ mongoose
 // for stocks ratings 
 app.use("/api/stocks", stockRoutes); // ✅ Mounts the stock routes
 
+// Virtual Trading API
+app.use("/api/virtual-trading", virtualTradingRoutes);
+app.use("/api/trades", virtualTradingRoutes);
+
 app.use("/api/ai", aiRoutes);
 
+// for sentiment analysis
 app.use("/api/sentiment", sentimentRoutes);
+
 
 // for dashboard live prices
 app.get("/stocks", async (req, res) => {

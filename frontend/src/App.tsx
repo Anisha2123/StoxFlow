@@ -9,6 +9,7 @@ import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
 import StockPrice from "./components/StockPrice";
 import Login from "./components/Login";
+import VirtualTrading from "./pages/VirtualTrading";
 
 function App() {
   return (
@@ -16,11 +17,11 @@ function App() {
       <Routes> 
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
-        {/* <Route path="/portfolio" element={<Portfolio />} />
-        <Route path="/news" element={<News />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="*" element={<NotFound />} /> */}
+        <Route path="/VT" element={<VirtualTrading />} />
+        {/* <Route path="/news" element={<News />} /> */}
+        {/* <Route path="/login" element={<Login />} /> */}
+        {/* <Route path="/signup" element={<Signup />} /> */}
+        {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </Router>
   );

@@ -672,3 +672,265 @@ button {
     padding: 20px;
   }
 }
+/* ==============================Virtual Trading======================== */
+.virtual-trading-container {
+  max-width: max-content;
+  margin: 50px auto;
+  padding: 30px;
+  border-radius: 12px;
+  /* background: #1e1e1e; Dark background */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  color: #e3e3e3;
+  
+  font-family: "Inter", sans-serif;
+}
+
+/* 🏦 Dashboard Heading */
+.virtual-trading-container h2 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #ffffff;
+}
+
+/* 📊 Trade Form */
+.trade-form {
+  display: flex;
+  justify-content: space-around;
+  /* flex-wrap: wrap; */
+  /* flex-direction: column; */
+  gap: 15rem;
+  padding: 2rem;
+  background: #2a2a2a;
+  border-radius: 10px;
+}
+@media (max-width: 768px){
+  .trade-form {
+    flex-direction: column;
+    gap:15px;
+  }
+  .trade-form .btn{
+    /* border:1px solid red; */
+    width: max-content;
+  }
+}
+
+/* 📌 Inputs & Dropdown */
+.trade-form input,
+.trade-form select,
+.trade-form button {
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  background: #333;
+  width: max-content;
+  align-self: center;
+  
+}
+.virtual-trading-container span{
+  color:blue;
+}
+.trade-form .select{
+  /* padding: 1rem; */
+  /* width: max-content; */
+  /* border:1px solid red; */
+  width: 14rem;
+}
+
+.trade-form input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* 🔥 Trade Button */
+.trade-form button {
+  background: #14a468;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  width: 20rem;
+  /* border:1px solid red; */
+  transition: all 0.3s ease-in-out;
+}
+
+.trade-form button:hover {
+  background: #14a468;
+}
+
+/* 💼 Portfolio Section */
+.portfolio-container {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  background: #292929;
+}
+.bal {
+  margin: 2rem;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #ffffff;
+  background: linear-gradient(135deg, #1e293b, #334155);
+  padding: 12px 20px;
+  border-radius: 10px;
+  display: inline-block;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.bal span {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #00c853; /* Green for positive balance */
+  margin-left: 8px;
+}
+
+/* 📈 Portfolio Titles */
+.portfolio-container h3 {
+  font-size: 20px;
+  font-weight: 500;
+  background: #14a468;
+  margin-bottom: 10px;
+}
+
+/* 📊 Portfolio Content */
+.portfolio-container p {
+  font-size: 16px;
+  color: #e3e3e3;
+  font-weight: 400;
+}
+
+p.no-stocks {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
+
+
+/* ========================Portfolio========================= */
+.portfolio-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 25px;
+  width: 60%;
+  margin: 40px auto;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+  color: white;
+}
+
+.portfolio-container h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.portfolio-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.portfolio-container li {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(5px);
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.portfolio-container p {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.portfolio-container li:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transition: 0.3s ease;
+}
+/* ======================= Stock Search======================== */
+/* 📈 Stock Search Container */
+.search-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 10px;
+  background: #1e1e1e; /* Dark theme */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  color: #e3e3e3;
+  font-family: "Inter", sans-serif;
+}
+
+/* 🔍 Search Input */
+.search-container input {
+  width: 90%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #444;
+  border-radius: 6px;
+  font-size: 16px;
+  background: #2a2a2a;
+  color: white;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.search-container input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.search-container input:focus {
+  outline: none;
+  /* background: #14a468; */
+}
+
+/* 🔘 Search Button */
+.search-container button {
+  padding: 12px;
+  width: 10rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  background: #14a468;
+  color: white;
+  transition: all 0.3s ease-in-out;
+}
+
+.search-container button:hover {
+  /* background: #14a468; */
+}
+
+/* 📜 Stock List */
+.search-container ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 15px;
+}
+
+/* 📌 Individual Stock Items */
+.search-container li {
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 6px;
+  background: #292929;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  color: #e3e3e3;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-container li:hover {
+  background: #333;
+}
+
