@@ -6,7 +6,7 @@ import TradingDashboard from "../components/VitualTradingDashboard.js";
 import Portfolio from "../components/Portfolio.tsx";
 import TradingHistory from "../components/TradeHistory.tsx";
 import { TradeProvider } from "../components/TradeContext"; // ✅ Import TradeProvider
-
+import { StockProvider } from "../components/StockContext";
 
 interface Trade {
   stockSymbol: string;
@@ -20,12 +20,14 @@ interface Trade {
 const VirtualTrading = () => {
   // const [tradeHistory, setTradeHistory] = useState<Trade[]>([]);
   return (
-    < TradeProvider >
-    <div className="trading-container">
-      <StockSearch />
-      <TradingDashboard />
-      <Portfolio />
-    </div>
+    <TradeProvider>
+    <StockProvider>
+        <div className="trading-container">
+          <StockSearch />
+          <TradingDashboard />
+          <Portfolio />
+        </div>
+      </StockProvider>
     </TradeProvider>
   );
 };

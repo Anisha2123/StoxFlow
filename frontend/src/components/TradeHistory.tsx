@@ -50,7 +50,7 @@ const TradingHistory: React. FC<TradingHistoryProps> = ({ history }) => {
 
   return (
     <div className="trading-history">
-      <h2>📜 Trading History</h2>
+      <h2>📜 Latest Trades</h2>
       {tradeHistory.length === 0 ? (
         <p>No trades executed yet.</p>
       ) : (

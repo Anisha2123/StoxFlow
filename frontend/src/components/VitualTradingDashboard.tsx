@@ -3,6 +3,8 @@ import axios from "axios";
 import TradingHistory from "./TradeHistory";
 import Portfolio from "./Portfolio";
 import { useTrade } from "./TradeContext"; // Import context hook
+import { useStockContext } from "./StockContext"; // ✅ Correct import
+
 import "../App.css";
 
 interface Stock {
@@ -36,6 +38,7 @@ const VirtualTradingDashboard: React.FC = () => {
   const [stockSymbol, setStockSymbol] = useState("AAPL");
   const [userId, setUserId] = useState<string | null>(null); // ✅ Store user ID
   const { fetchTrades } = useTrade(); // Use fetchTrades from context
+  const { selectedStock } = useStockContext();
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId")?.replace(/\s/g, "");
@@ -45,53 +48,63 @@ const VirtualTradingDashboard: React.FC = () => {
     }
   }, []);
 
+  // const fetchUserPortfolio = async (userId: string) => {
+  //   try {
+  //     console.log("🔹 Fetching portfolio for user:", userId);
+  //     const response = await axios.post(`http://localhost:5000/api/portfolio/update-portfolio/${userId}`);
+      
+  //     console.log("📌 Portfolio API Response:", response.data);
+      
+  //     setPortfolio(response.data || { balance: 0, stocks: [] });
+  //   } catch (error) {
+  //     console.error("❌ Error fetching portfolio:", error);
+  //     setPortfolio({ balance: 0, stocks: [] }); // ✅ Default empty portfolio on error
+  //   }
+  // };
+
   const fetchUserPortfolio = async (userId: string) => {
     try {
+      console.log("🔹 Fetching portfolio for user:", userId);
       const response = await axios.post(`http://localhost:5000/api/portfolio/update-portfolio/${userId}`);
-      setPortfolio(response.data || { balance: 0, stocks: [] });
+      
+      console.log("📌 Portfolio API Response:", response.data);
+  
+      setPortfolio(prevState => {
+        console.log("🟢 Updating Portfolio State...", response.data);
+        return response.data || { balance: 0, stocks: [] };
+      });
     } catch (error) {
-      console.error("Error fetching portfolio:", error);
-      setPortfolio({ balance: 0, stocks: [] }); // ✅ Prevent `undefined`
+      console.error("❌ Error fetching portfolio:", error);
+      setPortfolio({ balance: 0, stocks: [] });
     }
   };
+  
+  
 
-  
-  
   const handleTrade = async () => {
-  
-    
     if (!userId) {
       alert("Please log in first.");
       return;
     }
-
-    if (!stockSymbol) {
+    if (!selectedStock) {
       alert("Please select a stock first!");
       return;
     }
   
-    const marketPrice = 150; // Replace with actual fetched stock price
+    const { stockSymbol, marketPrice } = selectedStock;
     const totalAmount = quantity * marketPrice;
-    
+  
     const tradeData = {
-      userId, // ✅ Include userId in trade data
-      stockSymbol: stockSymbol,
-      marketPrice,
-      totalAmount,
-      quantity,
-      tradeType: tradeType, // ✅ Fix: match the `Trade` interface
-      time: new Date().toISOString(), // Add timestamp
-    };
-    console.log(
+      userId,
       stockSymbol,
       marketPrice,
       totalAmount,
       quantity,
       tradeType,
-    );
-
-   
-
+      time: new Date().toISOString(),
+    };
+  
+    console.log("🚀 Sending trade data:", tradeData);
   
     try {
       const response = await fetch(`http://localhost:5000/api/trades/save-trade/${userId}`, {
@@ -99,21 +112,21 @@ const VirtualTradingDashboard: React.FC = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(tradeData),
       });
-       
+  
       const result = await response.json();
       if (response.ok) {
-        // alert("Trade saved successfully!");
-        console.log("Trade Data:", result.trade);
+        console.log("✅ Trade Data Saved:", result.trade);
         fetchTrades(userId); // ✅ Fetch updated trade history
-
-      
-      // Update Portfolio
-      await fetch(`http://localhost:5000/api/portfolio/update-portfolio/${userId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(tradeData),
-      });
-
+  
+        await fetch(`http://localhost:5000/api/portfolio/update-portfolio/${userId}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(tradeData),
+        });
+        
+        console.log("🔄 Fetching updated portfolio...");
+      await fetchUserPortfolio(userId); // 🔹 Pass userId correctly
+        
       } else {
         alert("Error saving trade!");
       }
@@ -123,20 +136,12 @@ const VirtualTradingDashboard: React.FC = () => {
     }
   };
   
+  
 
   useEffect(() => {
-    fetchPortfolio();
+    fetchUserPortfolio(userId);
   }, []);
 
-  const fetchPortfolio = async () => {
-    try {
-      const response = await axios.get(`/api/virtual-trading/portfolio/${localStorage.getItem("userId")}`);
-      setPortfolio(response.data || { balance: 0, stocks: [] }); // ✅ Prevent `undefined`
-    } catch (error) {
-      console.error("Error fetching portfolio:", error);
-      setPortfolio({ balance: 0, stocks: [] }); // ✅ Default empty portfolio on error
-    }
-  };
 
   const handleSelectStock = (symbol: string) => {
     setStockSymbol(symbol); // Update the stock symbol when a stock is selected

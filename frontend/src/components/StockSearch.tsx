@@ -2,13 +2,16 @@
 
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { useStockContext } from "./StockContext"; // ✅ Check if context is imported
+
+// const { setSelectedStock } = useStockContext(); // ✅ Safe inside component
 import "../App.css";
 import {
   Chart as ChartJS,
-  ChartTypeRegistry,
+  ChartTypeRegistry,   
   CategoryScale,
   LinearScale,
-  BarElement,
+  BarElement, 
   Title,
   Tooltip,
   Legend,
@@ -58,6 +61,9 @@ const StockChart: React.FC = () => {
   const chartRef = useRef<ChartJS<keyof ChartTypeRegistry> | null>(null);
   const [suggestions, setSuggestions] = useState<{ symbol: string; name: string }[]>([]);
   const [sentiment, setSentiment] = useState({ sentimentScore: 0, sentimentLabel: "", news: [] });
+  const { selectedStock, setSelectedStock } = useStockContext(); // ✅ Use context
+  
+// const { handleSelectStock } = useStockContext(); // ✅ Extract function from context
 
   useEffect(() => {
     if (!symbol) return;
@@ -94,6 +100,25 @@ const StockChart: React.FC = () => {
           throw new Error("Invalid data format");
         }
 
+        const latestStock = data[data.length - 1]; // ✅ Get latest stock price
+
+        setSelectedStock({
+          stockSymbol: symbol,
+          marketPrice: latestStock.marketPrice, // ✅ Update context with selected stock
+        });
+  
+      
+     
+         // ✅ Ensure `setSelectedStock` is available before using
+         if (setSelectedStock) {
+          setSelectedStock({
+            stockSymbol: symbol,
+            marketPrice: latestStock.close, // ✅ Use close price for market price
+          });
+        }
+
+        console.log("Selected Stock:", symbol, "Market Price:", latestStock.marketPrice);
+
         setStockData(data);
         setChartData(formatChartData(data, chartType));
       })
@@ -103,22 +128,32 @@ const StockChart: React.FC = () => {
   useEffect(() => {
     if (!stockData.length) return;
 
-    // console.log(
-    //   "Candlestick Data:",
-    //   stockData.map((item) => ({
-    //     x: new Date(item.date),
-    //     o: item.open,
-    //     h: item.high,
-    //     l: item.low,
-    //     c: item.close,
-    //   }))
-    // );
-
     if (chartRef.current) {
       chartRef.current.destroy();
       chartRef.current = null;
     }
   }, [chartType]);
+
+   // ✅ Fix: Update context when selecting stock
+   const handleSelectStock = (stockSymbol: string) => {
+    console.log("📢 handleSelectStock called with:", stockSymbol);
+    setSymbol(stockSymbol);
+
+    // Fetch market price and update context
+    axios.get(`http://localhost:5000/stock-data?symbol=${stockSymbol}`)
+      .then((res) => {
+        const latestStock = res.data[res.data.length - 1];
+        setSelectedStock({ stockSymbol, marketPrice: latestStock.close });
+      })
+      .catch((error) => console.error("Error fetching stock price:", error));
+  };
+
+  // const handleSelectStock = (symbol: string) => {
+  //   console.log("📢 handleSelectStock called with:", symbol);
+  //   setSymbol(symbol);
+  // };
+  
+  
 
   const formatChartData = (data: StockData[], type: string) => {
     if (type === "candlestick") {
@@ -166,13 +201,16 @@ const StockChart: React.FC = () => {
         />
         {suggestions.length > 0 && (
           <ul className="suggestions-list">
-            {suggestions.map((stock) => (
+            {/* {suggestions.map((stock) => (
               <li key={stock.symbol} onClick={() => {
                 setSymbol(stock.symbol);
                 setSearchQuery("");
                 setSuggestions([]);
               }}>
-                {stock.symbol} - {stock.name}
+                {stock.symbol} - {stock.name} */}
+                {suggestions.map((stock) => (
+          <li key={stock.symbol} onClick={() => handleSelectStock(stock.symbol)}>
+            {stock.symbol}
               </li>
             ))}
           </ul>
