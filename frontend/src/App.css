@@ -817,12 +817,12 @@ p.no-stocks {
   backdrop-filter: blur(10px);
   border-radius: 15px;
   padding: 25px;
-  width: 60%;
+  width: 100%;
   margin: 40px auto;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.2);
   text-align: center;
-  color: white;
+  /* color: white; */
 }
 
 .portfolio-container h2 {
@@ -843,17 +843,29 @@ p.no-stocks {
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.9);
+  /* color: rgba(255, 255, 255, 0.9); */
 }
 
 .portfolio-container p {
   font-size: 18px;
-  color: rgba(255, 255, 255, 0.7);
+  /* color: rgba(255, 255, 255, 0.7); */
 }
 
 .portfolio-container li:hover {
   background: rgba(255, 255, 255, 0.25);
   transition: 0.3s ease;
+}
+.portfolio-container .summary{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap:2rem;
+  margin: 2rem;
+  background-color: #14a468;
+  border-radius: 1rem;
+  padding: 1rem;
+  color:#274cbc;
 }
 /* ======================= Stock Search======================== */
 /* 📈 Stock Search Container */

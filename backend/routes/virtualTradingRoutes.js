@@ -31,8 +31,8 @@ router.get("/portfolio/:userId", async (req, res) => {
 
 router.post("/save-trade/:userId", async (req, res) => {
   console.log("✅ API Called save-trade ");
-  console.log("🔹 Request Params:", req.params);
-  console.log("🔹 Request Body:", req.body);
+  // console.log("🔹 Request Params:", req.params);
+  // console.log("🔹 Request Body:", req.body);
 
   const { stockSymbol, marketPrice, totalAmount, quantity, tradeType } = req.body;
   const userId = req.params.userId; // ✅ Get userId from request params
@@ -53,10 +53,10 @@ router.post("/save-trade/:userId", async (req, res) => {
       timestamp: new Date(),
     });
 
-    console.log("🔹 Trade Data Before Saving:", newTrade);
+    // console.log("🔹 Trade Data Before Saving:", newTrade);
 
     await newTrade.save();
-    console.log("✅ Trade Saved Successfully:", newTrade);
+    // console.log("✅ Trade Saved Successfully:", newTrade);
 
     res.json({ message: "Trade saved", trade: newTrade });
   } catch (error) {
@@ -81,14 +81,14 @@ router.post("/save-trade/:userId", async (req, res) => {
 router.get("/get-trades/:userId", async (req, res) => {
   
   try {
-    
+    // 
     console.log("✅ API Called get-trades");
-    console.log("🔹 Request Params:", req.params);
-    console.log("🔹 Request Params:", req.params);
-    console.log("🔹 Request Body:", req.body);
-    const userId = decodeURIComponent(req.params.userId); // ✅ Decode userId
-    console.log("🔹 Decoded User ID:", userId);
-    // const userId = req.params.userId; // ✅ Fix: Get userId from req.params
+    // console.log("🔹 Request Params:", req.params);
+    // console.log("🔹 Request Params:", req.params);
+    // console.log("🔹 Request Body:", req.body);
+    // const userId = decodeURIComponent(req.params.userId); // ✅ Decode userId
+    // console.log("🔹 Decoded User ID:", userId);
+    const userId = req.params.userId; // ✅ Fix: Get userId from req.params
     const trades = await Trade.find({ userId }).sort({ timestamp: -1 });
     res.json(trades);
   } catch (error) {

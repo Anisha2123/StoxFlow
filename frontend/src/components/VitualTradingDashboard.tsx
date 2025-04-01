@@ -77,7 +77,8 @@ const VirtualTradingDashboard: React.FC = () => {
     try {
       console.log("🔄 Fetching updated portfolio for UserId:", userId);
   
-      const response = await axios.post(`http://localhost:5000/api/portfolio/update-portfolio/${userId}`);
+      // const response = await axios.post(`http://localhost:5000/api/portfolio/update-portfolio/${userId}`);
+      const response = await axios.get(`http://localhost:5000/api/portfolio/get-portfolio/${userId}`);
       console.log("📌 Portfolio API Response:", response.data);
   
       if (response.data && response.data.portfolio) {
@@ -136,8 +137,12 @@ const VirtualTradingDashboard: React.FC = () => {
           body: JSON.stringify(tradeData),
         });
         
-        console.log("🔄 Fetching updated portfolio...");
-      await fetchUserPortfolio(userId); // 🔹 Pass userId correctly
+      //   console.log("🔄 Fetching updated portfolio...");
+      // await fetchUserPortfolio(userId); // 🔹 Pass userId correctly
+
+      console.log("🛠️ Debug: Selected Stock Before Portfolio Fetch", selectedStock);
+fetchUserPortfolio(userId);
+
         
       } else {
         alert("Error saving trade!");
@@ -150,9 +155,9 @@ const VirtualTradingDashboard: React.FC = () => {
   
   
 
-  useEffect(() => {
-    fetchUserPortfolio(userId);
-  }, []);
+  // useEffect(() => {
+  //   fetchUserPortfolio(userId);
+  // }, []);
 
 
   const handleSelectStock = (symbol: string) => {
