@@ -70,7 +70,7 @@ interface Stock {
 }
 
 interface PortfolioProps {
-  portfolio?: { stocks: Stock[] }; // ✅ Make portfolio optional
+  portfolio?: { balance: number; stocks: Stock[] };
 }
 
 const Portfolio: React.FC<PortfolioProps> = ({ portfolio, userId }) => {
@@ -80,6 +80,9 @@ const Portfolio: React.FC<PortfolioProps> = ({ portfolio, userId }) => {
   return (
     <div className="portfolio-container">
       <h2>Portfolio</h2>
+      <div className="balance">
+        <strong>Current Balance:</strong> ${portfolio?.balance?.toFixed(2) || "0.00"}
+      </div>
       <table>
         <thead>
           <tr>
