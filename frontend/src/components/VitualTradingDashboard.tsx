@@ -26,8 +26,9 @@ interface Trade {
 }
 
 interface Portfolio {
-  balance: number;
+  userId: string;
   stocks: Stock[];
+  _id?: string;  // Optional if you don’t use it
 }
 
 const VirtualTradingDashboard: React.FC = () => {
@@ -42,9 +43,14 @@ const VirtualTradingDashboard: React.FC = () => {
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId")?.replace(/\s/g, "");
+    console.log("🆔 Retrieved UserId from LocalStorage:", storedUserId);
+
     if (storedUserId) {
       setUserId(storedUserId);
       fetchUserPortfolio(storedUserId); // ✅ Fetch portfolio inside this file
+    }
+    else {
+      console.error("❌ UserId is null! Check authentication.");
     }
   }, []);
 
@@ -63,19 +69,25 @@ const VirtualTradingDashboard: React.FC = () => {
   // };
 
   const fetchUserPortfolio = async (userId: string) => {
+    if (!userId) {
+      console.error("❌ fetchUserPortfolio called with null userId");
+      return;
+    }
+  
     try {
-      console.log("🔹 Fetching portfolio for user:", userId);
+      console.log("🔄 Fetching updated portfolio for UserId:", userId);
+  
       const response = await axios.post(`http://localhost:5000/api/portfolio/update-portfolio/${userId}`);
-      
       console.log("📌 Portfolio API Response:", response.data);
   
-      setPortfolio(prevState => {
-        console.log("🟢 Updating Portfolio State...", response.data);
-        return response.data || { balance: 0, stocks: [] };
-      });
+      if (response.data && response.data.portfolio) {
+        setPortfolio(response.data.portfolio); // ✅ Ensure correct data update
+      } else {
+        console.error("⚠️ Portfolio API response format incorrect:", response.data);
+        setPortfolio({ balance: 0, stocks: [] }); // Prevent UI crash
+      }
     } catch (error) {
       console.error("❌ Error fetching portfolio:", error);
-      setPortfolio({ balance: 0, stocks: [] });
     }
   };
   
@@ -165,7 +177,9 @@ const VirtualTradingDashboard: React.FC = () => {
       </div>
       {/* <Portfolio userId={userId} /> */}
 
-      {userId && <Portfolio portfolio={portfolio} />} {/* ✅ Pass portfolio as prop */}
+      {userId && <Portfolio portfolio={portfolio} userId={userId} />}
+
+
       
       <TradingHistory history={tradeHistory} />
     </div>

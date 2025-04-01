@@ -70,27 +70,40 @@ interface Stock {
 }
 
 interface PortfolioProps {
-  portfolio?: { balance: number; stocks: Stock[] }; // ✅ Make portfolio optional
+  portfolio?: { stocks: Stock[] }; // ✅ Make portfolio optional
 }
 
-const Portfolio: React.FC<PortfolioProps> = ({ portfolio = { balance: 0, stocks: [] } }) => {
+const Portfolio: React.FC<PortfolioProps> = ({ portfolio, userId }) => {
   const stocks = portfolio?.stocks || []; // ✅ Ensure stocks is always an array
-
+  console.log("📊 Portfolio prop received in UI:", portfolio); // ✅ Debugging
+  console.log("🆔 UserId in Portfolio component:", userId); // ✅ Debugging userId
   return (
     <div className="portfolio-container">
-      <h3>Portfolio</h3>
-      <p>Balance: ${portfolio?.balance ? portfolio.balance.toFixed(2) : "0.00"}</p> {/* ✅ Prevents `toFixed` error */}
-      <ul>
-        {stocks.length > 0 ? (
-          stocks.map((stock, index) => (
-            <li key={index}>
-              {stock.stockSymbol} - {stock.quantity} shares @ ${stock.marketPrice}
-            </li>
-          ))
-        ) : (
-          <p>No stocks available</p>
-        )}
-      </ul>
+      <h2>Portfolio</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Stock</th>
+            <th>Quantity</th>
+            <th>Avg. Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {stocks.length > 0 ? (
+            stocks.map((stock, index) => (
+              <tr key={index}>
+                <td>{stock.stockSymbol}</td>
+                <td>{stock.quantity}</td>
+                <td>  {stock.averagePrice.toFixed(2)}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={3}>No stocks in portfolio</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
   );
 };

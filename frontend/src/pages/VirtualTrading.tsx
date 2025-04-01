@@ -25,7 +25,7 @@ const VirtualTrading = () => {
         <div className="trading-container">
           <StockSearch />
           <TradingDashboard />
-          <Portfolio />
+          {/* <Portfolio /> */}
         </div>
       </StockProvider>
     </TradeProvider>
