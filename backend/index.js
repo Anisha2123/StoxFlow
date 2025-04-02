@@ -44,6 +44,8 @@ app.use("/api/ai", aiRoutes);
 
 // for sentiment analysis
 app.use("/api/sentiment", sentimentRoutes);
+// app.use("/api/ai/ratings", sentimentRoutes);
+
 
 // Use portfolio routes 
 app.use("/api/portfolio", portfolioRoutes); // ✅ Prefix the route

@@ -2,12 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
+import Portfolio from "./Portfolio";
 import "../App.css";
 
 interface Stock {
   symbol: string;
   price: string;
   previousPrice?: string;
+}
+interface Portfolio {
+  userId: string;
+  stocks: Stock[];
+  _id?: string;  // Optional if you don’t use it
 }
 
 const Dashboard = () => {
@@ -97,6 +103,7 @@ const Dashboard = () => {
           
         </div>
       )}
+     {/* <Portfolio portfolio={portfolio} userId={userId} /> */}
     </div>
   );
 };

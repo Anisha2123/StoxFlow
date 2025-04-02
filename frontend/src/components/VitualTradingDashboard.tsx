@@ -4,7 +4,7 @@ import TradingHistory from "./TradeHistory";
 import Portfolio from "./Portfolio";
 import { useTrade } from "./TradeContext"; // Import context hook
 import { useStockContext } from "./StockContext"; // ✅ Correct import
-
+import Navbar from "./NavBar";
 import "../App.css";
 
 interface Stock {
@@ -165,7 +165,9 @@ fetchUserPortfolio(userId);
   };
 
   return (
+    
     <div className="virtual-trading-container">
+      
       {/* <StockSearch onSelectStock={handleSelectStock} /> */}
       {/* <h2>Virtual Trading Dashboard</h2> */}
       <div className="bal">
@@ -173,6 +175,7 @@ fetchUserPortfolio(userId);
 </div>
 
       <div className="trade-form">
+ 
         <input type="number" min="1" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} />
         <select className="select" value={tradeType} onChange={(e) => setTradeType(e.target.value as "buy" | "sell")}>
           <option  value="buy">Buy</option>

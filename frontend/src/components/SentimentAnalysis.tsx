@@ -10,10 +10,13 @@ const StockInfo = ({ symbol }) => {
   useEffect(() => {
     if (!symbol) return;
 
-    // Fetch AI Stock Ratings
-    fetch(`http://localhost:5000/api/ai/ratings/${symbol}`)
-      .then((res) => res.json())
-      .then((data) => setAiRating(data));
+      // Fetch AI Stock Ratings
+  fetch(`http://localhost:5000/api/ai/ratings/${symbol}`)
+  .then((res) => res.json())
+  .then((data) => {
+    console.log("AI Rating Data:", data);  // Log the data to the console
+    setAiRating(data);
+  });
 
     // Fetch Sentiment Analysis
     fetch(`http://localhost:5000/api/sentiment/${symbol}`)
