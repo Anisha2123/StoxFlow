@@ -57,7 +57,7 @@ const VirtualTradingDashboard: React.FC = () => {
   // const fetchUserPortfolio = async (userId: string) => {
   //   try {
   //     console.log("🔹 Fetching portfolio for user:", userId);
-  //     const response = await axios.post(`http://localhost:5000/api/portfolio/update-portfolio/${userId}`);
+  //     const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/portfolio/update-portfolio/${userId}`);
       
   //     console.log("📌 Portfolio API Response:", response.data);
       
@@ -77,8 +77,8 @@ const VirtualTradingDashboard: React.FC = () => {
     try {
       console.log("🔄 Fetching updated portfolio for UserId:", userId);
   
-      // const response = await axios.post(`http://localhost:5000/api/portfolio/update-portfolio/${userId}`);
-      const response = await axios.get(`http://localhost:5000/api/portfolio/get-portfolio/${userId}`);
+      // const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/portfolio/update-portfolio/${userId}`);
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/portfolio/get-portfolio/${userId}`);
       console.log("📌 Portfolio API Response:", response.data);
   
       if (response.data && response.data.portfolio) {
@@ -120,7 +120,7 @@ const VirtualTradingDashboard: React.FC = () => {
     console.log("🚀 Sending trade data:", tradeData);
   
     try {
-      const response = await fetch(`http://localhost:5000/api/trades/save-trade/${userId}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trades/save-trade/${userId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(tradeData),
@@ -131,7 +131,7 @@ const VirtualTradingDashboard: React.FC = () => {
         console.log("✅ Trade Data Saved:", result.trade);
         fetchTrades(userId); // ✅ Fetch updated trade history
   
-        await fetch(`http://localhost:5000/api/portfolio/update-portfolio/${userId}`, {
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/portfolio/update-portfolio/${userId}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(tradeData),

@@ -18,7 +18,7 @@
 //     if (!symbol) return;
 
 //       // Fetch AI Stock Ratings
-//   fetch(`http://localhost:5000/api/ai/ratings/${symbol}`)
+//   fetch(`${import.meta.env.VITE_BACKEND_URL}/api/ai/ratings/${symbol}`)
 //   .then((res) => res.json())
 //   .then((data) => {
 //     console.log("AI Rating Data:", data);  // Log the data to the console
@@ -26,7 +26,7 @@
 //   });
 
 //     // Fetch Sentiment Analysis
-//     fetch(`http://localhost:5000/api/sentiment/${symbol}`)
+//     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sentiment/${symbol}`)
 //       .then((res) => res.json())
 //       .then((data) => setSentiment(data));
 //   }, [symbol]);
@@ -66,7 +66,7 @@ const StockInfo: React.FC<StockInfoProps> = ({ symbol }) => {
     if (!symbol) return;
 
     // Fetch AI Stock Ratings
-    fetch(`http://localhost:5000/api/ai/ratings/${symbol}`)
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/ai/ratings/${symbol}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("AI Rating Data:", data);
@@ -74,7 +74,7 @@ const StockInfo: React.FC<StockInfoProps> = ({ symbol }) => {
       });
 
     // Fetch Sentiment Analysis
-    fetch(`http://localhost:5000/api/sentiment/${symbol}`)
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sentiment/${symbol}`)
       .then((res) => res.json())
       .then((data) => setSentiment(data));
   }, [symbol]);

@@ -15,7 +15,7 @@
 //   useEffect(() => {
 //     const fetchPortfolio = async () => {
 //       try {
-//         const response = await fetch(`http://localhost:5000/api/portfolio/${userId}`);
+//         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/portfolio/${userId}`);
 //         const data = await response.json();
 //         setPortfolio(data.stocks || []);
 //       } catch (error) {

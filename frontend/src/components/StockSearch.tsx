@@ -68,7 +68,7 @@ const StockChart: React.FC = () => {
   useEffect(() => {
     if (!symbol) return;
   
-    fetch(`http://localhost:5000/api/sentiment/${symbol}`)
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/sentiment/${symbol}`)
       .then((res) => res.json())
       .then((data) => {
         setSentiment(data);
@@ -79,7 +79,7 @@ const StockChart: React.FC = () => {
   useEffect(() => {
     if (searchQuery.length < 2) return setSuggestions([]);
 
-    axios.get(`http://localhost:5000/search-stocks?query=${searchQuery}`)
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/search-stocks?query=${searchQuery}`)
       .then((res) => setSuggestions(res.data))
       .catch((err) => console.error("Search error:", err));
   }, [searchQuery]);
@@ -91,7 +91,7 @@ const StockChart: React.FC = () => {
       return;
     }
 
-    fetch(`http://localhost:5000/stock-data?symbol=${symbol}`)
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/stock-data?symbol=${symbol}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("Fetched data:", data);
@@ -140,7 +140,7 @@ const StockChart: React.FC = () => {
     setSymbol(stockSymbol);
 
     // Fetch market price and update context
-    axios.get(`http://localhost:5000/stock-data?symbol=${stockSymbol}`)
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/stock-data?symbol=${stockSymbol}`)
       .then((res) => {
         const latestStock = res.data[res.data.length - 1];
         setSelectedStock({ stockSymbol, marketPrice: latestStock.close });

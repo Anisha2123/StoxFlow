@@ -41,7 +41,6 @@ router.post("/save-trade/:userId", async (req, res) => {
     console.error("❌ User ID is missing!");
     return res.status(400).json({ error: "User ID is required" });
   }
-
   try {
     const newTrade = new Trade({
       userId,  // ✅ Ensure userId is included

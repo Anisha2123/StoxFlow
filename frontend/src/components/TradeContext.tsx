@@ -33,7 +33,7 @@ export const TradeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const encodedUserId = encodeURIComponent(cleanUserId); // ✅ Properly encode userId
     try {
       console.log("📢 Fetching trades for userId:", encodedUserId);
-      const response = await fetch(`http://localhost:5000/api/trades/get-trades/${encodedUserId}`);
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/trades/get-trades/${encodedUserId}`);
       
       console.log("📩 Raw Response:", response);
 
@@ -45,7 +45,7 @@ export const TradeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       console.error("Error fetching trade history:", error);
     }
   };
-  http://localhost:5000/api/trades/get-trades/+1%20650-555-3434"
+  // ${import.meta.env.VITE_BACKEND_URL}/api/trades/get-trades/+1%20650-555-3434"
 
   return (
     <TradeContext.Provider value={{ tradeHistory, fetchTrades }}>
