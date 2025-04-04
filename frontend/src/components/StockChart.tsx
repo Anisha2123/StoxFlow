@@ -37,6 +37,9 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+interface StockChartProps {
+  symbol: string;
+}
 
 interface StockData {
   date: string;
@@ -46,6 +49,25 @@ interface StockData {
   close: number;
   volume: number;
 }
+interface NewsItem {
+  link: string;
+  title: string;
+  publisher: string;
+  thumbnail?: {
+    resolutions: { url: string }[];
+  };
+}
+interface CandleData {
+  o: number;
+  h: number;
+  l: number;
+  c: number;
+}
+
+// return `O: ${(d as CandleData).o} H: ${(d as CandleData).h} L: ${(d as CandleData).l} C: ${(d as CandleData).c}`;
+// return `O: ${(d as any).o} H: ${(d as any).h} L: ${(d as any).l} C: ${(d as any).c}`;
+
+
 
 // const StockChart: React.FC<{ symbol: string }> = ({ symbol }) => {
 const StockChart: React.FC = () => {
@@ -55,10 +77,20 @@ const StockChart: React.FC = () => {
   const [chartType, setChartType] = useState("candlestick");
   const [stockData, setStockData] = useState<StockData[]>([]);
   const [chartData, setChartData] = useState<any>(null);
-  const chartRef = useRef<ChartJS<keyof ChartTypeRegistry> | null>(null);
+  // const chartRef = useRef<ChartJS<keyof ChartTypeRegistry> | null>(null);
+  const chartRef = useRef<ChartJS<"line"> | null>(null);
   const [suggestions, setSuggestions] = useState<{ symbol: string; name: string }[]>([]);
-  const [sentiment, setSentiment] = useState({ sentimentScore: 0, sentimentLabel: "", news: [] });
-
+  // const [sentiment, setSentiment] = useState({ sentimentScore: 0, sentimentLabel: "", news: [] });
+  const [sentiment, setSentiment] = useState<{
+    sentimentScore: number;
+    sentimentLabel: string;
+    news: NewsItem[];
+  }>({
+    sentimentScore: 0,
+    sentimentLabel: "",
+    news: [],
+  });
+  
   useEffect(() => {
     if (!symbol) return;
   
@@ -225,7 +257,9 @@ const StockChart: React.FC = () => {
           callbacks: {
             label: function (tooltipItem) {
               let d = tooltipItem.raw;
-              return `O: ${d.o} H: ${d.h} L: ${d.l} C: ${d.c}`;
+              // return `O: ${d.o} H: ${d.h} L: ${d.l} C: ${d.c}`;
+              return `O: ${(d as CandleData).o} H: ${(d as CandleData).h} L: ${(d as CandleData).l} C: ${(d as CandleData).c}`;
+// return `O: ${(d as any).o} H: ${(d as any).h} L: ${(d as any).l} C: ${(d as any).c}`;
             },
           },
         },
@@ -237,10 +271,10 @@ const StockChart: React.FC = () => {
 
 
         {chartType === "line" && chartData && (
-          <Line ref={chartRef} data={chartData} options={{ responsive: true }} />
+          <Line data={chartData} options={{ responsive: true }} />
         )}
         {chartType === "bar" && chartData && (
-          <Bar ref={chartRef} data={chartData} options={{ responsive: true }} />
+          <Bar data={chartData} options={{ responsive: true }} />
         )}
       </div>
       <div className="sentiment-container">

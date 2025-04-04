@@ -4,7 +4,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:5000/api/auth";
 
-export const sendOtp = async (email: string): Promise<void> => {
+export const sendOtp = async (phone: number): Promise<void> => {
   try {
     const response = await axios.post(`${API_URL}/send-otp`, { phone });
     console.log("OTP sent successfully:", response.data);

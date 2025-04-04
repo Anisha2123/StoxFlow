@@ -15,6 +15,10 @@ const portfolioRoutes = require("./routes/portfolio"); // Import portfolio route
 const dotenv = require("dotenv")
 const mongoose = require("mongoose");
 
+const mongoURI = process.env.MONGO_URI;
+const yahooFinanceChartUrl = process.env.YAHOO_FINANCE_CHART_URL;
+const yahooFinanceSearchUrl = process.env.YAHOO_FINANCE_SEARCH_URL;
+
 dotenv.config();
 const app = express();
 app.use(cors());
@@ -22,7 +26,7 @@ app.use(express.json());
 
 // Connect MongoDB
 mongoose
-  .connect("mongodb://127.0.0.1:27017/stockDB", {
+  .connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -95,7 +99,8 @@ app.get("/stock-data", async (req, res) => {
     const { symbol } = req.query;
     if (!symbol) return res.status(400).json({ error: "Stock symbol is required" });
 
-    const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1mo`;
+    // const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1mo`;
+    const yahooUrl = `${yahooFinanceChartUrl}${symbol}?interval=1d&range=1mo`;
     const response = await axios.get(yahooUrl);
 
     const chartData = response.data.chart.result[0];

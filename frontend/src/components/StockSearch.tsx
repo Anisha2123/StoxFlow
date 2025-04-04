@@ -263,7 +263,9 @@ const StockChart: React.FC = () => {
           callbacks: {
             label: function (tooltipItem) {
               let d = tooltipItem.raw;
-              return `O: ${d.o} H: ${d.h} L: ${d.l} C: ${d.c}`;
+              // return `O: ${d.o} H: ${d.h} L: ${d.l} C: ${d.c}`;
+              return `O: ${(d as any).o} H: ${(d as any).h} L: ${(d as any).l} C: ${(d as any).c}`;
+
             },
           },
         },
@@ -275,10 +277,10 @@ const StockChart: React.FC = () => {
 
 
         {chartType === "line" && chartData && (
-          <Line ref={chartRef} data={chartData} options={{ responsive: true }} />
+          <Line data={chartData} options={{ responsive: true }} />
         )}
         {chartType === "bar" && chartData && (
-          <Bar ref={chartRef} data={chartData} options={{ responsive: true }} />
+          <Bar data={chartData} options={{ responsive: true }} />
         )}
       </div>
       <div className="sentiment-container">

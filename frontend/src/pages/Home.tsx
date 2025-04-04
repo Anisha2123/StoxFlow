@@ -1,13 +1,12 @@
 
 // import StockPrice from "../components/StockPrice";
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import Dashboard from "../components/Dasboard";
 import StockChart from "../components/StockChart";
-import Portfolio from "../components/Portfolio";
-import TradingHistory from "../components/TradeHistory";
+// import Portfolio from "../components/Portfolio";
+// import TradingHistory from "../components/TradeHistory";
 import Navbar from "../components/NavBar";
-import { useTrade } from "../components/TradeContext"; // Import context hook
-
+// import { useTrade } from "../components/TradeContext"; // Import context hook
 
 
 
@@ -31,7 +30,7 @@ const Home = () => {
          <div>
           <Navbar />
       <Dashboard />
-      <StockChart symbol="AAPL" />
+      <StockChart/>
       
        {/* <TradingHistory /> */}
     </div>

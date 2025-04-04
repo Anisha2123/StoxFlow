@@ -1,8 +1,8 @@
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import Portfolio from "./pages/Portfolio";
-import NotFound from "./pages/NotFound";
+import Portfolio from "./components/Portfolio";
+// import NotFound from "./pages/NotFound";
 import Login from "./components/Login";
 import VirtualTrading from "./pages/VirtualTrading";
 import TradingHistory from "./components/TradeHistory";

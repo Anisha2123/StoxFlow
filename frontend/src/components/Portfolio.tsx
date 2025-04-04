@@ -162,9 +162,10 @@ interface Stock {
 
 interface PortfolioProps {
   portfolio?: { balance: number; stocks: Stock[] };
+  userId: string;
 }
 
-const Portfolio: React.FC<PortfolioProps> = ({ portfolio }) => {
+const Portfolio: React.FC<PortfolioProps> = ({ portfolio,  userId }) => {
   const stocks = portfolio?.stocks || [];
 
   return (

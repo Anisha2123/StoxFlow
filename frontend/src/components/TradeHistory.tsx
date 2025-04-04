@@ -1,48 +1,20 @@
-
-
-
 import React, { useState, useEffect } from "react";
 import { useTrade } from "./TradeContext"; // Import context hook
-
-interface Trade {
-  _id: string;
-  stockSymbol: string;
-  marketPrice: number;
-  totalAmount: number;
-  quantity: number;
-  tradeType: string;
-  timestamp: string;
-}
+import { Trade } from "../types/types"; // Import the Trade type
 
 interface TradingHistoryProps {
-  history: Trade[];
+  history: Trade[]; // Use the centralized Trade type
 }
 
-const TradingHistory: React. FC<TradingHistoryProps> = ({ history }) => {
-    const { tradeHistory, fetchTrades } = useTrade();
-    const [userId, setUserId] = useState<string | null>(null);
-//   useEffect(() => {
-//     const fetchTrades = async () => {
-//       try {
-//         const response = await fetch("http://localhost:5000/api/trades/get-trades");
-//         const data = await response.json();
-//         setTradeHistory(data); // ✅ Update trade history state
-//       } catch (error) {
-//         console.error("Error fetching trade history:", error);
-//       }
-//     };
-
-//     fetchTrades();
-//   }, []);
-
-
-
+const TradingHistory = () => {
+  const { tradeHistory, fetchTrades } = useTrade();
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
     if (storedUserId) {
       setUserId(storedUserId);
-      fetchTrades(storedUserId); // ✅ Fetch only if userId exists
+      fetchTrades(storedUserId); // Fetch only if userId exists
     } else {
       console.error("❌ userId is not found in localStorage!");
     }

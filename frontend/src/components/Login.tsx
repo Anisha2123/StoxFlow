@@ -103,10 +103,12 @@
 // export default Login;
 
 import React, { useState, useEffect } from "react";
-import { auth, RecaptchaVerifier, signInWithPhoneNumber } from "../../firebaseConfig";
+// import { auth, RecaptchaVerifier, signInWithPhoneNumber } from "../../firebaseConfig.json";
+import { auth, RecaptchaVerifier, signInWithPhoneNumber } from "../../firebaseConfig.ts";
+
 import { useNavigate } from "react-router-dom";
 import "../App.css"; // Import CSS
-
+// import {auth} from "../../../frontend/fir";
 declare global {
   interface Window {
     recaptchaVerifier: RecaptchaVerifier;

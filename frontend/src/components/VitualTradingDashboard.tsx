@@ -189,7 +189,7 @@ fetchUserPortfolio(userId);
 
 
       
-      <TradingHistory history={tradeHistory} />
+      <TradingHistory />
     </div>
   );
 };
