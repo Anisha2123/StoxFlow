@@ -17,7 +17,8 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/VT" element={<VirtualTrading />} />
         <Route path="/charts" element={<StockChart />} />
-        {/* <Route path="/login" element={<Login />} /> */}
+        {/* <Route path="/portfolio/:userId" element={<Portfolio />} /> */}
+        {/* portfolio={portfolio} userId={userId}  */}
         {/* <Route path="/signup" element={<Signup />} /> */}
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>

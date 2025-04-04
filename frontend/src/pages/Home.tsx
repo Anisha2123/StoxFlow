@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Dashboard from "../components/Dasboard";
 import StockChart from "../components/StockChart";
-// import Portfolio from "../components/Portfolio";
+import Portfolio from "../components/Portfolio";
 // import TradingHistory from "../components/TradeHistory";
 import Navbar from "../components/NavBar";
 // import { useTrade } from "../components/TradeContext"; // Import context hook
