@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Portfolio from "./Portfolio";
+// import Portfolio from "./Portfolio";
 import "../App.css";
 
 const Navbar = () => {

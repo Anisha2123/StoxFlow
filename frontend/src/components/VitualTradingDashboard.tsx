@@ -185,10 +185,8 @@ fetchUserPortfolio(userId);
       </div>
       {/* <Portfolio userId={userId} /> */}
 
-      {userId && <Portfolio portfolio={portfolio} userId={userId} />}
-
-
-      
+      {/* {userId && <Portfolio portfolio={portfolio} userId={userId} />} */}
+      {userId && <Portfolio portfolio={portfolio} userId={userId} hideNavbar={true} />} 
       <TradingHistory />
     </div>
   );

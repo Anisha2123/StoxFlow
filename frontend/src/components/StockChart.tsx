@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import Navbar from "./NavBar";
 import "../App.css";
 import {
   Chart as ChartJS,
@@ -70,7 +71,7 @@ interface CandleData {
 
 
 // const StockChart: React.FC<{ symbol: string }> = ({ symbol }) => {
-const StockChart: React.FC = () => {
+  const StockChart: React.FC<{ hideNavbar?: boolean }> = ({ hideNavbar = false }) => {
   const [symbol, setSymbol] = useState("AAPL"); // Default stock
   const [inputSymbol, setInputSymbol] = useState(""); // Input field value
   const [searchQuery, setSearchQuery] = useState("");
@@ -188,7 +189,10 @@ const StockChart: React.FC = () => {
   
   
   return (
-    <div className="chart-container">
+    <div className="stockchart">
+        {!hideNavbar && <Navbar />}
+       <div className="chart-container">
+      
         <div className="search-bar">
         <input
           type="text"
@@ -315,6 +319,8 @@ const StockChart: React.FC = () => {
 
 
     </div>
+    </div>
+
     
   );
 };

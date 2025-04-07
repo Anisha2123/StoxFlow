@@ -148,6 +148,7 @@
 // export default Portfolio;
 
 import React from "react";
+import Navbar from "./NavBar";
 
 interface Stock {
   stockSymbol: string;
@@ -163,62 +164,72 @@ interface Stock {
 interface PortfolioProps {
   portfolio?: { balance: number; stocks: Stock[] };
   userId: string;
+  hideNavbar?: boolean;
 }
 
-const Portfolio: React.FC<PortfolioProps> = ({ portfolio,  userId }) => {
+
+const Portfolio: React.FC<PortfolioProps> = ({ portfolio, userId, hideNavbar = false }) => {
+
+// const Portfolio: React.FC<PortfolioProps> = ({ portfolio,  userId }) => {
   const stocks = portfolio?.stocks || [];
 
   return (
-    <div className="portfolio-container">
-      <h2>Portfolio</h2>
+    <div className="port">
+       {!hideNavbar && <Navbar />}
 
-      <div className="summary">
-        <p><strong>💰 Current Balance:</strong> ${portfolio?.balance?.toFixed(2) || "0.00"}</p>
-        <p><strong>📈 Total Invested:</strong> ${stocks.reduce((acc, stock) => acc + (stock.totalInvested || 0), 0).toFixed(2)}</p>
-        <p><strong>📊 Current Value:</strong> ${stocks.reduce((acc, stock) => acc + (stock.currentValue || 0), 0).toFixed(2)}</p>
-        <p 
-          className={stocks.reduce((acc, stock) => acc + (stock.totalReturns || 0), 0) >= 0 ? "profit" : "loss"}>
-          <strong>🔄 Total Returns:</strong> 
-          <span> ${stocks.reduce((acc, stock) => acc + (stock.totalReturns || 0), 0).toFixed(2)} </span>
-          ({stocks.reduce((acc, stock) => acc + (stock.returnPercentage || 0), 0).toFixed(2)}%)
-        </p>
-      </div>
+       <div className="portfolio-container">
+     
+     <h2>Portfolio</h2>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Stock</th>
-            <th>Quantity</th>
-            <th>Avg. Price</th>
-            <th>Market Price</th>
-            <th>Total Invested</th>
-            <th>Current Value</th>
-            <th>Total Returns</th>
-          </tr>
-        </thead>
-        <tbody>
-          {stocks.length > 0 ? (
-            stocks.map((stock, index) => (
-              <tr key={index}>
-                <td>{stock.stockSymbol}</td>
-                <td>{stock.quantity}</td>
-                <td>${(stock.averagePrice || 0).toFixed(2)}</td>
-                <td>${(stock.marketPrice || 0).toFixed(2)}</td>
-                <td>${(stock.totalInvested || 0).toFixed(2)}</td>
-                <td>${(stock.currentValue || 0).toFixed(2)}</td>
-                <td className={stock.totalReturns >= 0 ? "profit" : "loss"}>
-                  ${((stock.totalReturns || 0).toFixed(2))} ({(stock.returnPercentage || 0).toFixed(2)}%)
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={7}>No stocks in portfolio</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+     <div className="summary">
+       <p><strong>💰 Current Balance:</strong> ${portfolio?.balance?.toFixed(2) || "0.00"}</p>
+       <p><strong>📈 Total Invested:</strong> ${stocks.reduce((acc, stock) => acc + (stock.totalInvested || 0), 0).toFixed(2)}</p>
+       <p><strong>📊 Current Value:</strong> ${stocks.reduce((acc, stock) => acc + (stock.currentValue || 0), 0).toFixed(2)}</p>
+       <p 
+         className={stocks.reduce((acc, stock) => acc + (stock.totalReturns || 0), 0) >= 0 ? "profit" : "loss"}>
+         <strong>🔄 Total Returns:</strong> 
+         <span> ${stocks.reduce((acc, stock) => acc + (stock.totalReturns || 0), 0).toFixed(2)} </span>
+         ({stocks.reduce((acc, stock) => acc + (stock.returnPercentage || 0), 0).toFixed(2)}%)
+       </p>
+     </div>
+
+     <table>
+       <thead>
+         <tr>
+           <th>Stock</th>
+           <th>Quantity</th>
+           <th>Avg. Price</th>
+           <th>Market Price</th>
+           <th>Total Invested</th>
+           <th>Current Value</th>
+           <th>Total Returns</th>
+         </tr>
+       </thead>
+       <tbody>
+         {stocks.length > 0 ? (
+           stocks.map((stock, index) => (
+             <tr key={index}>
+               <td>{stock.stockSymbol}</td>
+               <td>{stock.quantity}</td>
+               <td>${(stock.averagePrice || 0).toFixed(2)}</td>
+               <td>${(stock.marketPrice || 0).toFixed(2)}</td>
+               <td>${(stock.totalInvested || 0).toFixed(2)}</td>
+               <td>${(stock.currentValue || 0).toFixed(2)}</td>
+               <td className={stock.totalReturns >= 0 ? "profit" : "loss"}>
+                 ${((stock.totalReturns || 0).toFixed(2))} ({(stock.returnPercentage || 0).toFixed(2)}%)
+               </td>
+             </tr>
+           ))
+         ) : (
+           <tr>
+             <td colSpan={7}>No stocks in portfolio</td>
+           </tr>
+         )}
+       </tbody>
+     </table>
+   </div>
     </div>
+  
   );
 };
 
