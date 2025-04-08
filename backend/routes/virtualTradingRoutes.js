@@ -29,21 +29,88 @@ router.get("/portfolio/:userId", async (req, res) => {
 //   }
 // });
 
+// router.post("/save-trade/:userId", async (req, res) => {
+//   console.log("✅ API Called save-trade ");
+//   // console.log("🔹 Request Params:", req.params);
+//   // console.log("🔹 Request Body:", req.body);
+
+//   const { stockSymbol, marketPrice, totalAmount, quantity, tradeType } = req.body;
+//   const userId = req.params.userId; // ✅ Get userId from request params
+//   console.log(userId);
+//   if (!userId) {
+//     console.error("❌ User ID is missing!");
+//     return res.status(400).json({ error: "User ID is required" });
+//   }
+//   try {
+//     const newTrade = new Trade({
+//       userId,  // ✅ Ensure userId is included
+//       stockSymbol,
+//       marketPrice,
+//       totalAmount,
+//       quantity,
+//       tradeType,
+//       timestamp: new Date(),
+//     });
+
+//     // console.log("🔹 Trade Data Before Saving:", newTrade);
+
+//     await newTrade.save();
+//     // console.log("✅ Trade Saved Successfully:", newTrade);
+
+//     res.json({ message: "Trade saved", trade: newTrade });
+//   } catch (error) {
+//     console.error("❌ Error Saving Trade:", error);
+//     res.status(500).json({ error: "Error saving trade" });
+//   }
+// });
 router.post("/save-trade/:userId", async (req, res) => {
-  console.log("✅ API Called save-trade ");
-  // console.log("🔹 Request Params:", req.params);
-  // console.log("🔹 Request Body:", req.body);
+  console.log("✅ API Called: save-trade");
 
   const { stockSymbol, marketPrice, totalAmount, quantity, tradeType } = req.body;
-  const userId = req.params.userId; // ✅ Get userId from request params
-  console.log(userId);
+  const userId = req.params.userId;
+
+  console.log("🔹 Request Body:", req.body);
+  console.log("🔹 User ID from params:", userId);
+
   if (!userId) {
     console.error("❌ User ID is missing!");
     return res.status(400).json({ error: "User ID is required" });
   }
+
   try {
+    if (tradeType === "sell") {
+      console.log("📤 Trade Type: SELL");
+
+      const userPortfolio = await Portfolio.findOne({ userId });
+      console.log("🗂️ Fetched Portfolio:", userPortfolio);
+
+      if (!userPortfolio) {
+        console.error("❌ Portfolio not found");
+        return res.status(400).json({ error: "Portfolio not found" });
+      }
+
+      const existingStock = userPortfolio.stocks.find(
+        (stock) => stock.stockSymbol === stockSymbol
+      );
+
+      if (!existingStock) {
+        console.error("❌ Stock not found in portfolio");
+        return res.status(400).json({ error: "Stock not found in portfolio" });
+      }
+
+      console.log("📦 Stock in DB:", existingStock.stockSymbol);
+      console.log("🔢 Quantity in DB:", existingStock.quantity);
+      console.log("📉 Quantity trying to sell:", quantity);
+
+      if (existingStock.quantity < quantity) {
+        console.error("❌ Not enough quantity to sell");
+        return res.status(400).json({ error: "Not enough stocks to sell" });
+      }
+    }
+
+    // 📝 Create and save trade
     const newTrade = new Trade({
-      userId,  // ✅ Ensure userId is included
+      userId,
       stockSymbol,
       marketPrice,
       totalAmount,
@@ -52,17 +119,19 @@ router.post("/save-trade/:userId", async (req, res) => {
       timestamp: new Date(),
     });
 
-    // console.log("🔹 Trade Data Before Saving:", newTrade);
-
     await newTrade.save();
-    // console.log("✅ Trade Saved Successfully:", newTrade);
+    console.log("✅ Trade saved:", newTrade);
 
     res.json({ message: "Trade saved", trade: newTrade });
+
   } catch (error) {
-    console.error("❌ Error Saving Trade:", error);
-    res.status(500).json({ error: "Error saving trade" });
+    console.error("❌ Error saving trade:", error);
+    res.status(500).json({ error: "❌ Stock not found in portfolio" });
   }
 });
+
+
+
 
 
 

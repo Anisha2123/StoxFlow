@@ -74,7 +74,7 @@ const Home = () => {
       <StockChart hideNavbar={true} />
 
       <div className="port">
-      {userId && <Portfolio portfolio={portfolio} userId={userId} hideNavbar={false} />
+      {userId && <Portfolio portfolio={portfolio} userId={userId} hideNavbar={true} />
     }
       </div>
 <div className="trades">

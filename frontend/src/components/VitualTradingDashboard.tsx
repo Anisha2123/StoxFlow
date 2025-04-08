@@ -106,6 +106,7 @@ const VirtualTradingDashboard: React.FC = () => {
   
     const { stockSymbol, marketPrice } = selectedStock;
     const totalAmount = quantity * marketPrice;
+    
   
     const tradeData = {
       userId,
@@ -145,7 +146,7 @@ fetchUserPortfolio(userId);
 
         
       } else {
-        alert("Error saving trade!");
+        alert("❌ Stock not found in portfolio");
       }
     } catch (error) {
       console.error("Trade save error:", error);
