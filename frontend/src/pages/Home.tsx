@@ -6,6 +6,7 @@ import StockChart from "../components/StockChart";
 import Portfolio from "../components/Portfolio";
 import TradingHistory from "../components/TradeHistory";
 import Navbar from "../components/NavBar";
+import StockInfo from "../components/SentimentAnalysis";
 import axios from "axios";
 // import { useTrade } from "../components/TradeContext"; // Import context hook
 import "../App.css";
@@ -71,8 +72,9 @@ const Home = () => {
          <div className="home">
           <Navbar />
       <Dashboard />
-      <StockChart hideNavbar={true} />
-
+      {/* <StockChart hideNavbar={true} /> */}
+      <StockChart hideNavbar={true} hideNews={false} />
+      {/* <StockInfo ={"AAP"}/> */}
       <div className="port">
       {userId && <Portfolio portfolio={portfolio} userId={userId} hideNavbar={true} />
     }

@@ -71,13 +71,25 @@ interface CandleData {
 
 
 // const StockChart: React.FC<{ symbol: string }> = ({ symbol }) => {
-  const StockChart: React.FC<{ hideNavbar?: boolean }> = ({ hideNavbar = false }) => {
+  // const StockChart: React.FC<{ hideNavbar?: boolean }> = ({ hideNavbar = false }) => {
+    const StockChart: React.FC<{ hideNavbar?: boolean; hideNews?: boolean }> = ({ hideNavbar = false, hideNews = false }) => {
+
   const [symbol, setSymbol] = useState("AAPL"); // Default stock
   const [inputSymbol, setInputSymbol] = useState(""); // Input field value
   const [searchQuery, setSearchQuery] = useState("");
   const [chartType, setChartType] = useState("candlestick");
   const [stockData, setStockData] = useState<StockData[]>([]);
   const [chartData, setChartData] = useState<any>(null);
+  const [aiRating, setAiRating] = useState<{
+    symbol: string;
+    rating: string;
+    peRatio: number;
+    roe: number;
+    debtToEquity: number;
+    currentPrice: number;
+  } | null>(null);
+  
+
   // const chartRef = useRef<ChartJS<keyof ChartTypeRegistry> | null>(null);
   const chartRef = useRef<ChartJS<"line"> | null>(null);
   const [suggestions, setSuggestions] = useState<{ symbol: string; name: string }[]>([]);
@@ -153,6 +165,18 @@ interface CandleData {
     }
   }, [chartType]);
 
+  useEffect(() => {
+    if (!symbol) return;
+  
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/ai/ratings/${symbol}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setAiRating(data);
+      })
+      .catch((error) => console.error("Error fetching AI rating:", error));
+  }, [symbol]);
+  
+
   const formatChartData = (data: StockData[], type: string) => {
     if (type === "candlestick") {
       return {
@@ -213,6 +237,7 @@ interface CandleData {
             ))}
           </ul>
         )}
+        
       </div>
       <h2 className="chart-title">{symbol} Stock Chart</h2>
       <div className="chart-controls">
@@ -291,8 +316,44 @@ interface CandleData {
       {sentiment.sentimentLabel === "Positive" ? "📈 Bullish" : 
        sentiment.sentimentLabel === "Negative" ? "📉 Bearish" : "⚖ Neutral"}
     </span>
+    
   </div>
+  {aiRating && (
+  <div className="ai-rating-card">
+    <h3>🤖 AI Stock Insight — {aiRating.symbol}</h3>
+    <div className="ai-grid">
+      <div><strong>📈 Rating:</strong> {aiRating.rating}</div>
+      <div><strong>💵 Current Price:</strong> ${aiRating.currentPrice.toFixed(2)}</div>
+      <div><strong>📊 P/E Ratio:</strong> {aiRating.peRatio}</div>
+      <div><strong>📘 ROE:</strong> {(aiRating.roe * 100).toFixed(2)}%</div>
+      <div><strong>📉 Debt/Equity:</strong> {aiRating.debtToEquity.toFixed(2)}</div>
+    </div>
+  </div>
+)}
 
+
+
+  {/* <div className="news-section">
+    <h3>📰 Latest Market News</h3>
+    <ul className="news-list">
+      {sentiment.news.slice(0, 4).map((news, index) => (
+        <li key={index} className="news-item">
+          <a href={news.link} target="_blank" rel="noopener noreferrer">
+            {news.thumbnail?.resolutions ? (
+              <img src={news.thumbnail.resolutions[0].url} alt="News" className="news-image" />
+            ) : (
+              <div className="news-placeholder">No Image</div>
+            )}
+            <div className="news-text">
+              <h4>{news.title}</h4>
+              <p className="news-source">{news.publisher}</p>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div> */}
+  {!hideNews && (
   <div className="news-section">
     <h3>📰 Latest Market News</h3>
     <ul className="news-list">
@@ -313,6 +374,8 @@ interface CandleData {
       ))}
     </ul>
   </div>
+)}
+
 </div>
 
 

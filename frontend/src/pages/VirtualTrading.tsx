@@ -8,7 +8,7 @@ import Portfolio from "../components/Portfolio.tsx";
 import { TradeProvider } from "../components/TradeContext"; // ✅ Import TradeProvider
 import { StockProvider } from "../components/StockContext";
 import Navbar from "../components/NavBar.tsx";
-
+import StockChart from "../components/StockChart.tsx";
 
 // interface Trade {
 //   stockSymbol: string;
@@ -26,7 +26,7 @@ const VirtualTrading = () => {
     <StockProvider>
         <div className="trading-container">
         <Navbar />
-          <StockSearch />
+        <StockChart hideNavbar={true} hideNews={true} />
           <TradingDashboard />
           {/* <Portfolio /> */}
         </div>
